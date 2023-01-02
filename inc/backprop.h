@@ -18,22 +18,12 @@
 
 int state = 0; //0表未開始, 1表開始
 int turn = 1; //第幾手
-bool review_mode = 1; //0表示上一步模式，1表示下一步模式
 int MAX_turn = 0;
 int checkerboard[BOARDROW][BOARDCOLUMN]={0};
 
-int checkerboard_memory[STACKSIZE][BOARDROW][BOARDCOLUMN];
-int initial_row_memory[STACKSIZE];
-int initial_column_memory[STACKSIZE];
-int initial_chess_memory[STACKSIZE];
-int goal_row_memory[STACKSIZE];
-int goal_column_memory[STACKSIZE];
-int goal_chess_memory[STACKSIZE];
-int promotion_memory[STACKSIZE];
-
-
 int X_chess_memory[STACKSIZE][TOTAL_CHESS_NUM];
 int Y_chess_memory[STACKSIZE][TOTAL_CHESS_NUM];
+int review_mode = 0; //0表示正常; -1表示到第一手; 1表示到最後一手
 int game_mode = 0;
 int top = -1;
 int X_chess_top = -1;
@@ -56,7 +46,7 @@ typedef struct node NODE;
 int  initial_checkerboard(void);
 void move_chess(void);
 void call_back(void);
-void check_promotion(int goal_row, int goal_column);
+int  check_promotion(int goal_row, int goal_column);
 int  check_move_chess(int dir, int initial_row, int initial_column, int goal_row, int goal_column, int chess_index, int checkerboard[BOARDROW][BOARDCOLUMN]);
 int  check_direction(int initial_row, int initial_column, int goal_row, int goal_column, int chess_index);
 void print_checkerboard(void);
@@ -68,8 +58,6 @@ void push(int initial_row, int initial_column, int initial_chess, int goal_row, 
 int  pop(void);
 void file_print_chess(int initial_row, int initial_column, int goal_row, int goal_column, int chess_index);
 void print_time(void);
-void print_clk(void);
-// int  kbhit(void);
 
 void replay(void);
 void read_old_game(void);
