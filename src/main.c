@@ -1,4 +1,4 @@
-#include "../inc/backprop.h"
+#include "../inc/shogi.h"
 #include <ev.h>
 
 ev_io stdin_watcher;
@@ -27,7 +27,7 @@ struct time initial = {0,0,0,0,0,0};
 struct playerchess X = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 struct playerchess Y = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-NODE *stack = NULL;
+NODE *head = NULL;
 
 FILE *new_shogi_game = NULL;
 FILE *old_shogi_game = NULL;
@@ -1056,7 +1056,7 @@ int isEmpty(){
     else return FALSE;
 }
 
-void push(int init_row, int init_col, int initial_chess, int goal_row, int goal_col, int goal_chess, int X_chess[20], int Y_chess[20]){
+void push(int init_row, int init_col, int init_chess, int goal_row, int goal_col, int goal_chess, int X_chess[20], int Y_chess[20]){
     int i,j;
     NODE *tmp;
 
@@ -1067,18 +1067,18 @@ void push(int init_row, int init_col, int initial_chess, int goal_row, int goal_
         top++;
 
         if((tmp=(NODE*)malloc(sizeof(NODE))) != NULL){
-            tmp->initial_row_memory = init_row;
-            tmp->initial_column_memory = init_col;
-            tmp->initial_chess_memory = initial_chess;
+            tmp->init_row_memory = init_row;
+            tmp->init_col_memory = init_col;
+            tmp->init_chess_memory = init_chess;
             tmp->goal_row_memory = goal_row;
-            tmp->goal_column_memory = goal_col;
+            tmp->goal_col_memory = goal_col;
             tmp->goal_chess_memory = goal_chess;
             tmp->left = NULL;
-            if(stack != NULL){
-                tmp->right = stack;
-                stack->left = tmp;
+            if(head != NULL){
+                tmp->right = head;
+                head->left = tmp;
             }
-            stack = tmp;
+            head = tmp;
         }
 
         for(i=0; i<20; i++){
@@ -1093,17 +1093,17 @@ int pop(){
     int Xmax = -1, Ymax = -1;
     NODE *tmp = NULL;
 
-    if(stack == NULL){
+    if(head == NULL){
         printf("無法再悔棋\n");
         move_chess();
     }
     else{
         fseek(new_shogi_game, -18, SEEK_CUR);
 
-        tmp = stack;
-        stack = stack->right;
-        board[tmp->initial_row_memory][tmp->initial_column_memory] = tmp->initial_chess_memory;
-        board[tmp->goal_row_memory][tmp->goal_column_memory] = tmp->goal_chess_memory;
+        tmp = head;
+        head = head->right;
+        board[tmp->init_row_memory][tmp->init_col_memory] = tmp->init_chess_memory;
+        board[tmp->goal_row_memory][tmp->goal_col_memory] = tmp->goal_chess_memory;
         free(tmp);
 
         for(i=0; i<20; i++){
@@ -1321,8 +1321,8 @@ void review_old_game(){
     turn = 1;
     review_mode = 1;
 
-    while(stack->right != NULL){
-        stack = stack->right;
+    while(head->right != NULL){
+        head = head->right;
     }
     
     initial_checkerboard();
@@ -1403,20 +1403,20 @@ int review_pop_forward(){
         top++;
 
         if(review_mode == -1){
-            tmp = stack->left;
-            if(stack->left->left != NULL){
-                stack = stack->left->left;
+            tmp = head->left;
+            if(head->left->left != NULL){
+                head = head->left->left;
                 review_mode = 1;
             }
             else{
-                stack = stack->left;
+                head = head->left;
                 review_mode = 2;
             }
         }
         else if(review_mode == 1){
-            tmp = stack;
-            if(stack->left != NULL){
-                stack = stack->left;
+            tmp = head;
+            if(head->left != NULL){
+                head = head->left;
             }
             else{
                 review_mode = 2;
@@ -1424,17 +1424,17 @@ int review_pop_forward(){
         }
         else if(review_mode == -2){
             review_mode = 1;
-            tmp = stack;
-            if(stack->left != NULL){
-                stack = stack->left;
+            tmp = head;
+            if(head->left != NULL){
+                head = head->left;
             }
             else{
                 review_mode = 2;
             }
         }
         
-        board[tmp->initial_row_memory][tmp->initial_column_memory] = tmp->initial_chess_memory;
-        board[tmp->goal_row_memory][tmp->goal_column_memory] = tmp->goal_chess_memory;
+        board[tmp->init_row_memory][tmp->init_col_memory] = tmp->init_chess_memory;
+        board[tmp->goal_row_memory][tmp->goal_col_memory] = tmp->goal_chess_memory;
 
         for(i=0; i<20; i++){
             X.chess[i] = X_chess_memory[top][i];
@@ -1465,20 +1465,20 @@ int review_pop_back(){
     else{
         
         if(review_mode == 1){
-            tmp = stack->right;
-            if(stack->right->right != NULL){
-                stack = stack->right->right;
+            tmp = head->right;
+            if(head->right->right != NULL){
+                head = head->right->right;
                 review_mode = -1;
             }
             else{
-                stack = stack->right;
+                head = head->right;
                 review_mode = -2;
             }
         }
         else if(review_mode == -1){
-            tmp = stack;
-            if(stack->right != NULL){
-                stack = stack->right;
+            tmp = head;
+            if(head->right != NULL){
+                head = head->right;
             }
             else{
                 review_mode = -2;
@@ -1486,17 +1486,17 @@ int review_pop_back(){
         }
         else if(review_mode == 2){
             review_mode = -1;
-            tmp = stack;
-            if(stack->right != NULL){
-                stack = stack->right;
+            tmp = head;
+            if(head->right != NULL){
+                head = head->right;
             }
             else{
                 review_mode = -2;
             }
         }
         
-        board[tmp->initial_row_memory][tmp->initial_column_memory] = tmp->goal_chess_memory;
-        board[tmp->goal_row_memory][tmp->goal_column_memory] = tmp->initial_chess_memory;
+        board[tmp->init_row_memory][tmp->init_col_memory] = tmp->goal_chess_memory;
+        board[tmp->goal_row_memory][tmp->goal_col_memory] = tmp->init_chess_memory;
 
         for(i=0; i<20; i++){
             X.chess[i] = X_chess_memory[top][i];

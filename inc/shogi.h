@@ -30,11 +30,11 @@ int X_chess_top = -1;
 int Y_chess_top = -1;
 
 struct node{
-    int initial_row_memory;
-    int initial_column_memory;
-    int initial_chess_memory;
+    int init_row_memory;
+    int init_col_memory;
+    int init_chess_memory;
     int goal_row_memory;
-    int goal_column_memory;
+    int goal_col_memory;
     int goal_chess_memory;
     int promotion_memory;
     struct node *right;
@@ -54,7 +54,7 @@ void color(int color_code, char word[3]);
 
 void regret(void);
 int  isEmpty(void);
-void push(int init_row, int init_col, int initial_chess, int goal_row, int goal_col, int goal_chess, int X_chess[20], int Y_chess[20]);
+void push(int init_row, int init_col, int init_chess, int goal_row, int goal_col, int goal_chess, int X_chess[20], int Y_chess[20]);
 int  pop(void);
 void file_print_chess(int init_row, int init_col, int goal_row, int goal_col, int chess_index);
 void print_time(void);
