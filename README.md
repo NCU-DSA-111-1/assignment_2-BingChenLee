@@ -2,8 +2,8 @@
 
 **Subject**: 日本將棋對弈程式  
 **Author**: 通訊二 110503518 李秉宸  
-**Version**: v2.2  
-**Last Updated**: 2023.01.02
+**Version**: v2.3  
+**Last Updated**: 2023.01.03
 
 ## Make File & Run
 
@@ -55,7 +55,7 @@ n
 請輸入f(下一手)、b(上一手)進行複盤; 輸入n可繼續遊戲; 輸入s代表結束
 s
 ```
-If there's no more piece can forward, the program will deny your request.  
+If there's no more piece can forward or backward, the program will deny your request.  
 
 ## Usage 3 - Call back
 ```sh
@@ -104,6 +104,7 @@ v1.1 修復攻方可移動敵方部分棋子的問題。
 v2.0 將對局過程改以Linked list存取。
 v2.1 更新以Libev顯示計時器(包含累積以及單手花費時間)。
 v2.2 精簡部分程式碼、修復讀檔按b的問題，並新增讀檔後繼續玩的功能。 
+v2.3 修復讀檔跳過部分步驟的問題。
 ```
 
 ## Reference

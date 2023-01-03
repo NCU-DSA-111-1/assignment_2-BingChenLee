@@ -134,110 +134,110 @@ int main(int argc, char **argv){
 
 int initial_checkerboard(){
 
-    checkerboard[2][0] = checkerboard[2][8] =checkerboard[8][0] = checkerboard[8][8] = 0;
+    board[2][0] = board[2][8] =board[8][0] = board[8][8] = 0;
     for(int i=2; i<=6; i++){
-        checkerboard[2][i]=0;
-        checkerboard[8][i]=0;
+        board[2][i]=0;
+        board[8][i]=0;
     }
 
     for(int i=4; i<=6; i++){
         for(int j=0; j<=8; j++){
-            checkerboard[i][j]=0;
+            board[i][j]=0;
         }
     }
 
     //-1表示紅方香、-2表示紅方桂、-3表示紅方銀、-4表示紅方金、-5表示紅方王、-6表示紅方飛、-7表示紅方角、-8表示紅方步、-9表示紅方成香、-10表示紅方成桂、-11表示紅方成銀、-12表示紅方成步、-13表示紅方龍王、-14表示紅方龍馬
-    checkerboard[1][0] = checkerboard[1][8] = -1;
-    checkerboard[1][1] = checkerboard[1][7] = -2;
-    checkerboard[1][2] = checkerboard[1][6] = -3;
-    checkerboard[1][3] = checkerboard[1][5] = -4;
-    checkerboard[1][4] = -5;
-    checkerboard[2][1] = -6;
-    checkerboard[2][7] = -7;
-    checkerboard[3][0] = checkerboard[3][1] = checkerboard[3][2] = checkerboard[3][3] = checkerboard[3][4] = checkerboard[3][5] = checkerboard[3][6] = checkerboard[3][7] = checkerboard[3][8] = -8; 
+    board[1][0] = board[1][8] = -1;
+    board[1][1] = board[1][7] = -2;
+    board[1][2] = board[1][6] = -3;
+    board[1][3] = board[1][5] = -4;
+    board[1][4] = -5;
+    board[2][1] = -6;
+    board[2][7] = -7;
+    board[3][0] = board[3][1] = board[3][2] = board[3][3] = board[3][4] = board[3][5] = board[3][6] = board[3][7] = board[3][8] = -8; 
     
     //1表示藍方香、2表示藍方桂、3表示藍方銀、4表示藍方金、5表示藍方王、6表示藍方飛、7表示藍方角、8表示藍方步、9表示藍方成香、10表示藍方成桂、11表示藍方成銀、12表示藍方成步、13表示藍方龍王、14表示藍方龍馬
-    checkerboard[9][0] = checkerboard[9][8] = 1;
-    checkerboard[9][1] = checkerboard[9][7] = 2;
-    checkerboard[9][2] = checkerboard[9][6] = 3;
-    checkerboard[9][3] = checkerboard[9][5] = 4;
-    checkerboard[9][4] = 5;
-    checkerboard[8][7] = 6;
-    checkerboard[8][1] = 7;
-    checkerboard[7][0] = checkerboard[7][1] = checkerboard[7][2] = checkerboard[7][3] = checkerboard[7][4] = checkerboard[7][5] = checkerboard[7][6] = checkerboard[7][7] = checkerboard[7][8] = 8; 
+    board[9][0] = board[9][8] = 1;
+    board[9][1] = board[9][7] = 2;
+    board[9][2] = board[9][6] = 3;
+    board[9][3] = board[9][5] = 4;
+    board[9][4] = 5;
+    board[8][7] = 6;
+    board[8][1] = 7;
+    board[7][0] = board[7][1] = board[7][2] = board[7][3] = board[7][4] = board[7][5] = board[7][6] = board[7][7] = board[7][8] = 8; 
     
     return TRUE;
 }
 
 void move_chess(){
 
-    int initial_row = -2, initial_column = -2, goal_row = -2, goal_column = -2, chess_index = -2;
-    int actual_column_1, actual_column_2;
+    int init_row = -2, init_col = -2, goal_row = -2, goal_col = -2, chess_index = -2;
+    int actual_col_1, actual_col_2;
     int i=0, j=0, dir;
 
     state = 1;
     
     if(turn%2 == 1){
 
-        scanf("%d", &actual_column_1);
-        initial_column = 9-actual_column_1;
+        scanf("%d", &actual_col_1);
+        init_col = 9-actual_col_1;
         
-        if(actual_column_1 == -1){
+        if(actual_col_1 == -1){
             fclose(new_shogi_game);
             printf("對局過程已記錄完成\n");
             exit(0);
         }
-        else if(actual_column_1 == 0){
+        else if(actual_col_1 == 0){
             regret();
         }
-        else if(actual_column_1 == 10){
+        else if(actual_col_1 == 10){
             call_back();
         }
 
         else{
-            scanf("%d %d %d", &initial_row, &actual_column_2, &goal_row);
-            goal_column = 9-actual_column_2;
+            scanf("%d %d %d", &init_row, &actual_col_2, &goal_row);
+            goal_col = 9-actual_col_2;
             
-            if(checkerboard[initial_row][initial_column] > 0){
-                if(checkerboard[goal_row][goal_column] <= 0){
-                    dir = check_direction(initial_row, initial_column, goal_row, goal_column, checkerboard[initial_row][initial_column]);
-                    if(check_move_chess(dir, initial_row, initial_column, goal_row, goal_column, checkerboard[initial_row][initial_column], checkerboard) == TRUE){
-                        push(initial_row, initial_column, checkerboard[initial_row][initial_column], goal_row, goal_column, checkerboard[goal_row][goal_column], X.chess, Y.chess);
-                        file_print_chess(initial_row, initial_column, goal_row, goal_column, checkerboard[initial_row][initial_column]); 
+            if(board[init_row][init_col] > 0){
+                if(board[goal_row][goal_col] <= 0){
+                    dir = check_direction(init_row, init_col, goal_row, goal_col, board[init_row][init_col]);
+                    if(check_move_chess(dir, init_row, init_col, goal_row, goal_col, board[init_row][init_col], board) == TRUE){
+                        push(init_row, init_col, board[init_row][init_col], goal_row, goal_col, board[goal_row][goal_col], X.chess, Y.chess);
+                        file_print_chess(init_row, init_col, goal_row, goal_col, board[init_row][init_col]); 
 
-                        if(checkerboard[goal_row][goal_column] < 0){
-                            if(checkerboard[goal_row][goal_column] < -8){
-                                if(checkerboard[goal_row][goal_column] == -9){
-                                    checkerboard[goal_row][goal_column] = -1;
+                        if(board[goal_row][goal_col] < 0){
+                            if(board[goal_row][goal_col] < -8){
+                                if(board[goal_row][goal_col] == -9){
+                                    board[goal_row][goal_col] = -1;
                                 }
 
-                                else if(checkerboard[goal_row][goal_column] == -10){
-                                    checkerboard[goal_row][goal_column] = -2;
+                                else if(board[goal_row][goal_col] == -10){
+                                    board[goal_row][goal_col] = -2;
                                 }
 
-                                else if(checkerboard[goal_row][goal_column] == -11){
-                                    checkerboard[goal_row][goal_column] = -3;
+                                else if(board[goal_row][goal_col] == -11){
+                                    board[goal_row][goal_col] = -3;
                                 }
 
-                                else if(checkerboard[goal_row][goal_column] == -12){
-                                    checkerboard[goal_row][goal_column] = -8;
+                                else if(board[goal_row][goal_col] == -12){
+                                    board[goal_row][goal_col] = -8;
                                 }
 
-                                else if(checkerboard[goal_row][goal_column] == -13){
-                                    checkerboard[goal_row][goal_column] = -6;
+                                else if(board[goal_row][goal_col] == -13){
+                                    board[goal_row][goal_col] = -6;
                                 }
 
-                                else if(checkerboard[goal_row][goal_column] == -14){
-                                    checkerboard[goal_row][goal_column] = -7;
+                                else if(board[goal_row][goal_col] == -14){
+                                    board[goal_row][goal_col] = -7;
                                 }
                             }
                             X_chess_top ++;
-                            X.chess[X_chess_top] = -(checkerboard[goal_row][goal_column]);
+                            X.chess[X_chess_top] = -(board[goal_row][goal_col]);
                         }
 
-                        if(checkerboard[goal_row][goal_column] == -5){ //獲勝條件
-                            checkerboard[goal_row][goal_column]=checkerboard[initial_row][initial_column];
-                            checkerboard[initial_row][initial_column]=0;
+                        if(board[goal_row][goal_col] == -5){ //獲勝條件
+                            board[goal_row][goal_col]=board[init_row][init_col];
+                            board[init_row][init_col]=0;
                             game_mode = 3; //防止回到move_chess
                             turn++; 
                             print_checkerboard();
@@ -246,10 +246,10 @@ void move_chess(){
                             exit(0);
                         }
                         else{
-                            checkerboard[goal_row][goal_column]=checkerboard[initial_row][initial_column];
-                            checkerboard[initial_row][initial_column]=0;
+                            board[goal_row][goal_col]=board[init_row][init_col];
+                            board[init_row][init_col]=0;
                             
-                            if(check_promotion(goal_row, goal_column))
+                            if(check_promotion(goal_row, goal_col))
                                 fprintf(new_shogi_game, " Y\n");
                             else
                                 fprintf(new_shogi_game, " N\n");
@@ -279,65 +279,65 @@ void move_chess(){
 
     else{
 
-        scanf("%d", &actual_column_1);
-        initial_column = 9-actual_column_1;
+        scanf("%d", &actual_col_1);
+        init_col = 9-actual_col_1;
         
-        if(actual_column_1 == -1){
+        if(actual_col_1 == -1){
             fclose(new_shogi_game);
             printf("對局過程已記錄完成\n");
             exit(0);
         }
-        else if(actual_column_1 == 0){
+        else if(actual_col_1 == 0){
             regret();
         }
-        else if(actual_column_1 == 10){
+        else if(actual_col_1 == 10){
             call_back();
         }
 
         else{
-            scanf("%d %d %d", &initial_row, &actual_column_2, &goal_row);
-            goal_column = 9-actual_column_2;
+            scanf("%d %d %d", &init_row, &actual_col_2, &goal_row);
+            goal_col = 9-actual_col_2;
             
-            if(checkerboard[initial_row][initial_column] < 0){
-                if(checkerboard[goal_row][goal_column] >= 0){
-                    dir = check_direction(initial_row, initial_column, goal_row, goal_column, checkerboard[initial_row][initial_column]);
-                    if(check_move_chess(dir, initial_row, initial_column, goal_row, goal_column, checkerboard[initial_row][initial_column], checkerboard) == TRUE){
-                        push(initial_row, initial_column, checkerboard[initial_row][initial_column], goal_row, goal_column, checkerboard[goal_row][goal_column], X.chess, Y.chess);
-                        file_print_chess(initial_row, initial_column, goal_row, goal_column, checkerboard[initial_row][initial_column]); 
+            if(board[init_row][init_col] < 0){
+                if(board[goal_row][goal_col] >= 0){
+                    dir = check_direction(init_row, init_col, goal_row, goal_col, board[init_row][init_col]);
+                    if(check_move_chess(dir, init_row, init_col, goal_row, goal_col, board[init_row][init_col], board) == TRUE){
+                        push(init_row, init_col, board[init_row][init_col], goal_row, goal_col, board[goal_row][goal_col], X.chess, Y.chess);
+                        file_print_chess(init_row, init_col, goal_row, goal_col, board[init_row][init_col]); 
 
-                        if(checkerboard[goal_row][goal_column] > 0){
-                            if(checkerboard[goal_row][goal_column] > 8){
-                                if(checkerboard[goal_row][goal_column] == 9){
-                                    checkerboard[goal_row][goal_column] = 1;
+                        if(board[goal_row][goal_col] > 0){
+                            if(board[goal_row][goal_col] > 8){
+                                if(board[goal_row][goal_col] == 9){
+                                    board[goal_row][goal_col] = 1;
                                 }
 
-                                else if(checkerboard[goal_row][goal_column] == 10){
-                                    checkerboard[goal_row][goal_column] = 2;
+                                else if(board[goal_row][goal_col] == 10){
+                                    board[goal_row][goal_col] = 2;
                                 }
 
-                                else if(checkerboard[goal_row][goal_column] == 11){
-                                    checkerboard[goal_row][goal_column] = 3;
+                                else if(board[goal_row][goal_col] == 11){
+                                    board[goal_row][goal_col] = 3;
                                 }
 
-                                else if(checkerboard[goal_row][goal_column] == 12){
-                                    checkerboard[goal_row][goal_column] = 8;
+                                else if(board[goal_row][goal_col] == 12){
+                                    board[goal_row][goal_col] = 8;
                                 }
 
-                                else if(checkerboard[goal_row][goal_column] == 13){
-                                    checkerboard[goal_row][goal_column] = 6;
+                                else if(board[goal_row][goal_col] == 13){
+                                    board[goal_row][goal_col] = 6;
                                 }
 
-                                else if(checkerboard[goal_row][goal_column] == 14){
-                                    checkerboard[goal_row][goal_column] = 7;
+                                else if(board[goal_row][goal_col] == 14){
+                                    board[goal_row][goal_col] = 7;
                                 }
                             }
                             Y_chess_top ++;
-                            Y.chess[Y_chess_top] = -(checkerboard[goal_row][goal_column]);
+                            Y.chess[Y_chess_top] = -(board[goal_row][goal_col]);
                         }
 
-                        if(checkerboard[goal_row][goal_column] == 5){ //獲勝條件
-                            checkerboard[goal_row][goal_column]=checkerboard[initial_row][initial_column];
-                            checkerboard[initial_row][initial_column]=0;
+                        if(board[goal_row][goal_col] == 5){ //獲勝條件
+                            board[goal_row][goal_col]=board[init_row][init_col];
+                            board[init_row][init_col]=0;
                             game_mode = 3; //防止回到move_chess
                             turn++; 
                             print_checkerboard();
@@ -346,10 +346,10 @@ void move_chess(){
                             exit(0);
                         }
                         else{
-                            checkerboard[goal_row][goal_column]=checkerboard[initial_row][initial_column];
-                            checkerboard[initial_row][initial_column]=0;
+                            board[goal_row][goal_col]=board[init_row][init_col];
+                            board[init_row][init_col]=0;
 
-                            if(check_promotion(goal_row, goal_column))
+                            if(check_promotion(goal_row, goal_col))
                                 fprintf(new_shogi_game, " Y\n");
                             else
                                 fprintf(new_shogi_game, " N\n");
@@ -397,7 +397,7 @@ void call_back(){
                 }
 
                 for(i=1; i<=9; i++){
-                    if(checkerboard[i][BOARDCOLUMN-call_back_column-1] == 8){
+                    if(board[i][BOARDCOL-call_back_column-1] == 8){
                         printf("一筋二步，該位置無法放置棋子，請重新輸入\n");
                         move_chess();
                     }
@@ -420,9 +420,9 @@ void call_back(){
                 }
             }
 
-            if(checkerboard[call_back_row][BOARDCOLUMN-call_back_column-1] == 0){
-                push(0, 0, 0, call_back_row, BOARDCOLUMN-call_back_column-1, checkerboard[call_back_row][BOARDCOLUMN-call_back_column-1], X.chess, Y.chess);
-                checkerboard[call_back_row][BOARDCOLUMN-call_back_column-1] = X.chess[call_back_index-1];
+            if(board[call_back_row][BOARDCOL-call_back_column-1] == 0){
+                push(0, 0, 0, call_back_row, BOARDCOL-call_back_column-1, board[call_back_row][BOARDCOL-call_back_column-1], X.chess, Y.chess);
+                board[call_back_row][BOARDCOL-call_back_column-1] = X.chess[call_back_index-1];
                 file_print_chess(X_chess_top, 0, call_back_row, 9-call_back_column, X.chess[call_back_index-1]);
                 fprintf(new_shogi_game, " N\n");
                 X.chess[call_back_index-1] = 0;
@@ -463,7 +463,7 @@ void call_back(){
                 }
 
                 for(i=1; i<=9; i++){
-                    if(checkerboard[i][BOARDCOLUMN-call_back_column-1] == -8){
+                    if(board[i][BOARDCOL-call_back_column-1] == -8){
                         printf("一筋二步，該位置無法放置棋子，請重新輸入\n");
                         move_chess();
                     }
@@ -486,9 +486,9 @@ void call_back(){
                 }
             }
 
-            if(checkerboard[call_back_row][BOARDCOLUMN-call_back_column-1] == 0){
-                push(0, 0, 0, call_back_row, BOARDCOLUMN-call_back_column-1, checkerboard[call_back_row][BOARDCOLUMN-call_back_column-1], X.chess, Y.chess);
-                checkerboard[call_back_row][BOARDCOLUMN-call_back_column-1] = Y.chess[call_back_index-1];
+            if(board[call_back_row][BOARDCOL-call_back_column-1] == 0){
+                push(0, 0, 0, call_back_row, BOARDCOL-call_back_column-1, board[call_back_row][BOARDCOL-call_back_column-1], X.chess, Y.chess);
+                board[call_back_row][BOARDCOL-call_back_column-1] = Y.chess[call_back_index-1];
                 file_print_chess(Y_chess_top, 0, call_back_row, 9-call_back_column, Y.chess[call_back_index-1]);
                 fprintf(new_shogi_game, " N\n");
                 Y.chess[call_back_index-1] = 0;
@@ -514,19 +514,19 @@ void call_back(){
     }
 }
 
-int check_promotion(int goal_row, int goal_column){
+int check_promotion(int goal_row, int goal_col){
 
     char check;
 
     //香變成香
-    if(abs(checkerboard[goal_row][goal_column]) == 1){
+    if(abs(board[goal_row][goal_col]) == 1){
         if((turn%2 == 1 && goal_row == 1) || (turn%2 == 0 && goal_row == 9)){
-            if(checkerboard[goal_row][goal_column] > 0){
-                checkerboard[goal_row][goal_column] = 9; 
+            if(board[goal_row][goal_col] > 0){
+                board[goal_row][goal_col] = 9; 
             }
 
-            else if(checkerboard[goal_row][goal_column] < 0){
-                checkerboard[goal_row][goal_column] = -9;
+            else if(board[goal_row][goal_col] < 0){
+                board[goal_row][goal_col] = -9;
             }
             return TRUE;
         }
@@ -536,13 +536,13 @@ int check_promotion(int goal_row, int goal_column){
                 getc(stdin);
                 scanf("%c",&check);
 
-                if(checkerboard[goal_row][goal_column]>0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = 9;
+                if(board[goal_row][goal_col]>0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = 9;
                     return TRUE;
                 }
 
-                else if(checkerboard[goal_row][goal_column]<0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = -9;
+                else if(board[goal_row][goal_col]<0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = -9;
                     return TRUE;
                 }
 
@@ -558,14 +558,14 @@ int check_promotion(int goal_row, int goal_column){
     }
 
     //桂變成桂
-    else if(abs(checkerboard[goal_row][goal_column]) == 2){
+    else if(abs(board[goal_row][goal_col]) == 2){
         if((turn%2 == 1 && goal_row <= 2) || (turn%2 == 0 && goal_row >= 8)){
-            if(checkerboard[goal_row][goal_column]>0){
-                checkerboard[goal_row][goal_column] = 10;
+            if(board[goal_row][goal_col]>0){
+                board[goal_row][goal_col] = 10;
             }
 
-            else if(checkerboard[goal_row][goal_column]<0){
-                checkerboard[goal_row][goal_column] = -10;
+            else if(board[goal_row][goal_col]<0){
+                board[goal_row][goal_col] = -10;
             }
             return TRUE;
         }
@@ -575,13 +575,13 @@ int check_promotion(int goal_row, int goal_column){
                 getc(stdin);
                 scanf("%c",&check);
 
-                if(checkerboard[goal_row][goal_column]>0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = 10;
+                if(board[goal_row][goal_col]>0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = 10;
                     return TRUE;
                 }
 
-                else if(checkerboard[goal_row][goal_column]<0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = -10;
+                else if(board[goal_row][goal_col]<0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = -10;
                     return TRUE;
                 }
 
@@ -597,20 +597,20 @@ int check_promotion(int goal_row, int goal_column){
     }
 
     //銀變成銀
-    else if(abs(checkerboard[goal_row][goal_column]) == 3){
+    else if(abs(board[goal_row][goal_col]) == 3){
         if((turn%2 == 1 && goal_row <= 3) || (turn%2 == 0 && goal_row >= 7)){
             do{
                 printf("可進行升變，是否進行升變[Y/N]\n");
                 getc(stdin);
                 scanf("%c",&check);
 
-                if(checkerboard[goal_row][goal_column]>0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] =11;
+                if(board[goal_row][goal_col]>0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] =11;
                     return TRUE;
                 }
 
-                else if(checkerboard[goal_row][goal_column]<0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = -11;
+                else if(board[goal_row][goal_col]<0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = -11;
                     return TRUE;
                 }
 
@@ -626,20 +626,20 @@ int check_promotion(int goal_row, int goal_column){
     }
 
     //飛變龍王
-    else if(abs(checkerboard[goal_row][goal_column]) == 6){
+    else if(abs(board[goal_row][goal_col]) == 6){
         if((turn%2 == 1 && goal_row <= 3) || (turn%2 == 0 && goal_row >= 7)){
             do{
                 printf("可進行升變，是否進行升變[Y/N]\n");
                 getc(stdin);
                 scanf("%c",&check);
 
-                if(checkerboard[goal_row][goal_column]>0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = 13;
+                if(board[goal_row][goal_col]>0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = 13;
                     return TRUE;
                 }
 
-                else if(checkerboard[goal_row][goal_column]<0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = -13;
+                else if(board[goal_row][goal_col]<0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = -13;
                     return TRUE;
                 }
 
@@ -655,20 +655,20 @@ int check_promotion(int goal_row, int goal_column){
     }
 
     //角變龍馬
-    else if(abs(checkerboard[goal_row][goal_column]) == 7){
+    else if(abs(board[goal_row][goal_col]) == 7){
         if((turn%2 == 1 && goal_row <= 3) || (turn%2 == 0 && goal_row >= 7)){
             do{
                 printf("可進行升變，是否進行升變[Y/N]\n");
                 getc(stdin);
                 scanf("%c",&check);
 
-                if(checkerboard[goal_row][goal_column]>0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = 14;
+                if(board[goal_row][goal_col]>0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = 14;
                     return TRUE;
                 }
 
-                else if(checkerboard[goal_row][goal_column]<0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = -14;
+                else if(board[goal_row][goal_col]<0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = -14;
                     return TRUE;
                 }
 
@@ -684,15 +684,15 @@ int check_promotion(int goal_row, int goal_column){
     }
 
     //步變成步
-    else if(abs(checkerboard[goal_row][goal_column]) == 8){
+    else if(abs(board[goal_row][goal_col]) == 8){
         if((turn%2 == 1 && goal_row == 1) || (turn%2 == 0 && goal_row == 9)){
-            if(checkerboard[goal_row][goal_column]>0){
-                checkerboard[goal_row][goal_column] = 12;
+            if(board[goal_row][goal_col]>0){
+                board[goal_row][goal_col] = 12;
                 return TRUE;
             }
 
-            else if(checkerboard[goal_row][goal_column]<0){
-                checkerboard[goal_row][goal_column] = -12;
+            else if(board[goal_row][goal_col]<0){
+                board[goal_row][goal_col] = -12;
                 return TRUE;
             }
         }
@@ -702,13 +702,13 @@ int check_promotion(int goal_row, int goal_column){
                 getc(stdin);
                 scanf("%c",&check);
 
-                if(checkerboard[goal_row][goal_column]>0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = 12;
+                if(board[goal_row][goal_col]>0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = 12;
                     return TRUE;
                 }
 
-                else if(checkerboard[goal_row][goal_column]<0 && (check == 'Y' || check == 'y')){
-                    checkerboard[goal_row][goal_column] = -12;
+                else if(board[goal_row][goal_col]<0 && (check == 'Y' || check == 'y')){
+                    board[goal_row][goal_col] = -12;
                     return TRUE;
                 }
 
@@ -728,24 +728,24 @@ int check_promotion(int goal_row, int goal_column){
     }
 }
 
-int check_direction(int initial_row, int initial_column, int goal_row, int goal_column, int chess_index){
-    if(goal_column-initial_column == 0 && goal_row-initial_row < 0) return 1;
-    else if(goal_column-initial_column > 0 && goal_column-initial_column == -(goal_row-initial_row)) return 2;
-    else if(goal_column-initial_column > 0 && goal_row-initial_row == 0) return 3;
-    else if(goal_column-initial_column > 0 && goal_column-initial_column == goal_row-initial_row) return 4;
-    else if(goal_column-initial_column == 0 && goal_row-initial_row > 0) return 5;
-    else if(goal_column-initial_column < 0 && goal_column-initial_column == -(goal_row-initial_row)) return 6;
-    else if(goal_column-initial_column < 0 && goal_row-initial_row == 0) return 7;
-    else if(goal_column-initial_column < 0 && goal_column-initial_column == goal_row-initial_row) return 8;
-    else if(goal_column-initial_column == 1 && goal_row-initial_row == -2) return 9;
-    else if(goal_column-initial_column == -1 && goal_row-initial_row == -2) return 10;
-    else if(goal_column-initial_column == -1 && goal_row-initial_row == 2) return 11;
-    else if(goal_column-initial_column == 1 && goal_row-initial_row == 2) return 12;
+int check_direction(int init_row, int init_col, int goal_row, int goal_col, int chess_index){
+    if(goal_col-init_col == 0 && goal_row-init_row < 0) return 1;
+    else if(goal_col-init_col > 0 && goal_col-init_col == -(goal_row-init_row)) return 2;
+    else if(goal_col-init_col > 0 && goal_row-init_row == 0) return 3;
+    else if(goal_col-init_col > 0 && goal_col-init_col == goal_row-init_row) return 4;
+    else if(goal_col-init_col == 0 && goal_row-init_row > 0) return 5;
+    else if(goal_col-init_col < 0 && goal_col-init_col == -(goal_row-init_row)) return 6;
+    else if(goal_col-init_col < 0 && goal_row-init_row == 0) return 7;
+    else if(goal_col-init_col < 0 && goal_col-init_col == goal_row-init_row) return 8;
+    else if(goal_col-init_col == 1 && goal_row-init_row == -2) return 9;
+    else if(goal_col-init_col == -1 && goal_row-init_row == -2) return 10;
+    else if(goal_col-init_col == -1 && goal_row-init_row == 2) return 11;
+    else if(goal_col-init_col == 1 && goal_row-init_row == 2) return 12;
 }
 
-int check_move_chess(int dir, int initial_row, int initial_column, int goal_row, int goal_column, int chess_index, int checkerboard[BOARDROW][BOARDCOLUMN]){
-    double distance = sqrt(pow((double)(initial_column-goal_column),2)+pow((double)(goal_row-initial_row),2));
-    //printf("turn %d buffer= %d %d %d %d %d, dir= %d, distance= %f\n",turn, initial_column, initial_row, goal_column, goal_row, chess_index, dir, distance);
+int check_move_chess(int dir, int init_row, int init_col, int goal_row, int goal_col, int chess_index, int board[BOARDROW][BOARDCOL]){
+    double distance = sqrt(pow((double)(init_col-goal_col),2)+pow((double)(goal_row-init_row),2));
+    //printf("turn %d buffer= %d %d %d %d %d, dir= %d, distance= %f\n",turn, init_col, init_row, goal_col, goal_row, chess_index, dir, distance);
 
     int i;
     int check_point = 0;
@@ -766,8 +766,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
     else if(abs(chess_index) == 1){
 
         if(turn%2 == 1 && dir == 1){
-            for(i = initial_row-1; i > goal_row; i--){ 
-                if(checkerboard[i][initial_column] != 0){
+            for(i = init_row-1; i > goal_row; i--){ 
+                if(board[i][init_col] != 0){
                     return FALSE;
                     break;
                 }
@@ -776,8 +776,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(turn%2 == 0 && dir == 5){
-            for(i = initial_row+1; i < goal_row; i++){ 
-                if(checkerboard[i][initial_column] != 0){
+            for(i = init_row+1; i < goal_row; i++){ 
+                if(board[i][init_col] != 0){
                     return FALSE;
                     break;
                 }
@@ -789,8 +789,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
     // 飛車走十字
     else if(abs(chess_index) == 6){
         if(dir == 1){
-            for(i = initial_row-1; i > goal_row; i--){
-                if(checkerboard[i][initial_column] != 0){
+            for(i = init_row-1; i > goal_row; i--){
+                if(board[i][init_col] != 0){
                     return FALSE;
                     break;
                 }
@@ -799,8 +799,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 3){
-            for(i = initial_column+1; i < goal_column; i++){
-                if(checkerboard[initial_row][i] != 0){
+            for(i = init_col+1; i < goal_col; i++){
+                if(board[init_row][i] != 0){
                     return FALSE;
                     break;
                 }
@@ -809,8 +809,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 5){
-            for(i = initial_row+1; i < goal_row; i++){
-                if(checkerboard[i][initial_column] != 0){
+            for(i = init_row+1; i < goal_row; i++){
+                if(board[i][init_col] != 0){
                     return FALSE;
                     break;
                 }
@@ -819,8 +819,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 7){
-            for(i = initial_column-1; i > goal_column; i--){
-                if(checkerboard[initial_row][i] != 0){
+            for(i = init_col-1; i > goal_col; i--){
+                if(board[init_row][i] != 0){
                     return FALSE;
                     break;
                 }
@@ -832,8 +832,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
     // 角行走對角
     else if(abs(chess_index) == 7){
         if(dir == 2){
-            for(i = initial_row-1; i > goal_row; i--){
-                if(checkerboard[i][initial_column-(i-initial_row)] != 0){ 
+            for(i = init_row-1; i > goal_row; i--){
+                if(board[i][init_col-(i-init_row)] != 0){ 
                     return FALSE;
                     break;
                 }
@@ -842,8 +842,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 4){
-            for(i = initial_row+1; i < goal_row; i++){
-                if(checkerboard[i][initial_column+(i-initial_row)] != 0){ 
+            for(i = init_row+1; i < goal_row; i++){
+                if(board[i][init_col+(i-init_row)] != 0){ 
                     return FALSE;
                     break;
                 }
@@ -852,8 +852,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 6){
-            for(i = initial_row+1; i < goal_row; i++){
-                if(checkerboard[i][initial_column-(i-initial_row)] != 0){
+            for(i = init_row+1; i < goal_row; i++){
+                if(board[i][init_col-(i-init_row)] != 0){
                     return FALSE;
                     break;
                 }
@@ -862,8 +862,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 8){
-            for(i = initial_row-1; i > goal_row; i--){
-                if(checkerboard[i][initial_column+(i-initial_row)] != 0){ 
+            for(i = init_row-1; i > goal_row; i--){
+                if(board[i][init_col+(i-init_row)] != 0){ 
                     return FALSE;
                     break;
                 }
@@ -878,8 +878,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
     // 龍王走十字+四個對角
     else if(abs(chess_index) == 13){
         if(dir == 1){
-            for(i = initial_row-1; i > goal_row; i--){
-                if(checkerboard[i][initial_column] != 0){
+            for(i = init_row-1; i > goal_row; i--){
+                if(board[i][init_col] != 0){
                     return FALSE;
                     break;
                 }
@@ -888,8 +888,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 3){
-            for(i = initial_column+1; i < goal_column; i++){
-                if(checkerboard[initial_row][i] != 0){
+            for(i = init_col+1; i < goal_col; i++){
+                if(board[init_row][i] != 0){
                     return FALSE;
                     break;
                 }
@@ -898,8 +898,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 5){
-            for(i = initial_row+1; i < goal_row; i++){
-                if(checkerboard[i][initial_column] != 0){
+            for(i = init_row+1; i < goal_row; i++){
+                if(board[i][init_col] != 0){
                     return FALSE;
                     break;
                 }
@@ -908,8 +908,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 7){
-            for(i = initial_column-1; i > goal_column; i--){
-                if(checkerboard[initial_row][i] != 0){
+            for(i = init_col-1; i > goal_col; i--){
+                if(board[init_row][i] != 0){
                     return FALSE;
                     break;
                 }
@@ -925,8 +925,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
     // 龍馬走對角+四個直線
     else if(abs(chess_index) == 14){
         if(dir == 2){
-            for(i = initial_row-1; i > goal_row; i--){
-                if(checkerboard[i][initial_column-(i-initial_row)] != 0){ 
+            for(i = init_row-1; i > goal_row; i--){
+                if(board[i][init_col-(i-init_row)] != 0){ 
                     return FALSE;
                     break;
                 }
@@ -935,8 +935,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 4){
-            for(i = initial_row+1; i < goal_row; i++){
-                if(checkerboard[i][initial_column+(i-initial_row)] != 0){ 
+            for(i = init_row+1; i < goal_row; i++){
+                if(board[i][init_col+(i-init_row)] != 0){ 
                     return FALSE;
                     break;
                 }
@@ -945,8 +945,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 6){
-            for(i = initial_row+1; i < goal_row; i++){
-                if(checkerboard[i][initial_column-(i-initial_row)] != 0){
+            for(i = init_row+1; i < goal_row; i++){
+                if(board[i][init_col-(i-init_row)] != 0){
                     return FALSE;
                     break;
                 }
@@ -955,8 +955,8 @@ int check_move_chess(int dir, int initial_row, int initial_column, int goal_row,
         }
 
         else if(dir == 8){
-            for(i = initial_row-1; i > goal_row; i--){
-                if(checkerboard[i][initial_column+(i-initial_row)] != 0){ 
+            for(i = init_row-1; i > goal_row; i--){
+                if(board[i][init_col+(i-init_row)] != 0){ 
                     return FALSE;
                     break;
                 }
@@ -994,28 +994,28 @@ void print_checkerboard(){
         else if(Y.chess[i] == -8) printf("步");
     }
     printf("\n--------------------------\n");
-    for(j=BOARDCOLUMN-1; j>0; j--) printf("%d ",j);
+    for(j=BOARDCOL-1; j>0; j--) printf("%d ",j);
     
     printf("\n");
 
     for(i=1; i<BOARDROW; i++){
-        for(j=0; j<BOARDCOLUMN-1; j++){
-            color_code = (checkerboard[i][j] > 0) ? 34:31;
+        for(j=0; j<BOARDCOL-1; j++){
+            color_code = (board[i][j] > 0) ? 34:31;
             
-            if(abs(checkerboard[i][j]) == 1)       color(color_code,"香");
-            else if(abs(checkerboard[i][j]) == 2)  color(color_code,"桂");
-            else if(abs(checkerboard[i][j]) == 3)  color(color_code,"銀");
-            else if(abs(checkerboard[i][j]) == 4)  color(color_code,"金");
-            else if(abs(checkerboard[i][j]) == 5)  color(color_code,"王");
-            else if(abs(checkerboard[i][j]) == 6)  color(color_code,"飛");
-            else if(abs(checkerboard[i][j]) == 7)  color(color_code,"角");
-            else if(abs(checkerboard[i][j]) == 8)  color(color_code,"步");
-            else if(abs(checkerboard[i][j]) == 9)  color(color_code,"杏");
-            else if(abs(checkerboard[i][j]) == 10) color(color_code,"圭");
-            else if(abs(checkerboard[i][j]) == 11) color(color_code,"全");
-            else if(abs(checkerboard[i][j]) == 12) color(color_code,"と");
-            else if(abs(checkerboard[i][j]) == 13) color(color_code,"竜");
-            else if(abs(checkerboard[i][j]) == 14) color(color_code,"馬");
+            if(abs(board[i][j]) == 1)       color(color_code,"香");
+            else if(abs(board[i][j]) == 2)  color(color_code,"桂");
+            else if(abs(board[i][j]) == 3)  color(color_code,"銀");
+            else if(abs(board[i][j]) == 4)  color(color_code,"金");
+            else if(abs(board[i][j]) == 5)  color(color_code,"王");
+            else if(abs(board[i][j]) == 6)  color(color_code,"飛");
+            else if(abs(board[i][j]) == 7)  color(color_code,"角");
+            else if(abs(board[i][j]) == 8)  color(color_code,"步");
+            else if(abs(board[i][j]) == 9)  color(color_code,"杏");
+            else if(abs(board[i][j]) == 10) color(color_code,"圭");
+            else if(abs(board[i][j]) == 11) color(color_code,"全");
+            else if(abs(board[i][j]) == 12) color(color_code,"と");
+            else if(abs(board[i][j]) == 13) color(color_code,"竜");
+            else if(abs(board[i][j]) == 14) color(color_code,"馬");
             else printf("　");
         }
         printf("%d\n", i);
@@ -1056,7 +1056,7 @@ int isEmpty(){
     else return FALSE;
 }
 
-void push(int initial_row, int initial_column, int initial_chess, int goal_row, int goal_column, int goal_chess, int X_chess[20], int Y_chess[20]){
+void push(int init_row, int init_col, int initial_chess, int goal_row, int goal_col, int goal_chess, int X_chess[20], int Y_chess[20]){
     int i,j;
     NODE *tmp;
 
@@ -1067,11 +1067,11 @@ void push(int initial_row, int initial_column, int initial_chess, int goal_row, 
         top++;
 
         if((tmp=(NODE*)malloc(sizeof(NODE))) != NULL){
-            tmp->initial_row_memory = initial_row;
-            tmp->initial_column_memory = initial_column;
+            tmp->initial_row_memory = init_row;
+            tmp->initial_column_memory = init_col;
             tmp->initial_chess_memory = initial_chess;
             tmp->goal_row_memory = goal_row;
-            tmp->goal_column_memory = goal_column;
+            tmp->goal_column_memory = goal_col;
             tmp->goal_chess_memory = goal_chess;
             tmp->left = NULL;
             if(stack != NULL){
@@ -1102,8 +1102,8 @@ int pop(){
 
         tmp = stack;
         stack = stack->right;
-        checkerboard[tmp->initial_row_memory][tmp->initial_column_memory] = tmp->initial_chess_memory;
-        checkerboard[tmp->goal_row_memory][tmp->goal_column_memory] = tmp->goal_chess_memory;
+        board[tmp->initial_row_memory][tmp->initial_column_memory] = tmp->initial_chess_memory;
+        board[tmp->goal_row_memory][tmp->goal_column_memory] = tmp->goal_chess_memory;
         free(tmp);
 
         for(i=0; i<20; i++){
@@ -1123,25 +1123,25 @@ int pop(){
     }
 }
 
-void file_print_chess(int initial_row, int initial_column, int goal_row, int goal_column, int chess_index){
-    fprintf(new_shogi_game, "%3d %d %d",turn, 9-goal_column, goal_row);
+void file_print_chess(int init_row, int init_col, int goal_row, int goal_col, int chess_index){
+    fprintf(new_shogi_game, "%3d %d %d",turn, 9-goal_col, goal_row);
 
-    if(abs(chess_index)==1) fprintf(new_shogi_game, " 香 ");
-    else if(abs(chess_index)==2) fprintf(new_shogi_game, " 桂 ");
-    else if(abs(chess_index)==3) fprintf(new_shogi_game, " 銀 ");
-    else if(abs(chess_index)==4) fprintf(new_shogi_game, " 金 ");
-    else if(abs(chess_index)==5) fprintf(new_shogi_game, " 王 ");
-    else if(abs(chess_index)==6) fprintf(new_shogi_game, " 飛 ");
-    else if(abs(chess_index)==7) fprintf(new_shogi_game, " 角 ");
-    else if(abs(chess_index)==8) fprintf(new_shogi_game, " 步 ");
-    else if(abs(chess_index)==9) fprintf(new_shogi_game, " 杏 ");
+    if(abs(chess_index)==1)       fprintf(new_shogi_game, " 香 ");
+    else if(abs(chess_index)==2)  fprintf(new_shogi_game, " 桂 ");
+    else if(abs(chess_index)==3)  fprintf(new_shogi_game, " 銀 ");
+    else if(abs(chess_index)==4)  fprintf(new_shogi_game, " 金 ");
+    else if(abs(chess_index)==5)  fprintf(new_shogi_game, " 王 ");
+    else if(abs(chess_index)==6)  fprintf(new_shogi_game, " 飛 ");
+    else if(abs(chess_index)==7)  fprintf(new_shogi_game, " 角 ");
+    else if(abs(chess_index)==8)  fprintf(new_shogi_game, " 步 ");
+    else if(abs(chess_index)==9)  fprintf(new_shogi_game, " 杏 ");
     else if(abs(chess_index)==10) fprintf(new_shogi_game, " 圭 ");
     else if(abs(chess_index)==11) fprintf(new_shogi_game, " 全 ");
     else if(abs(chess_index)==12) fprintf(new_shogi_game, " と ");
     else if(abs(chess_index)==13) fprintf(new_shogi_game, " 竜 ");
     else if(abs(chess_index)==14) fprintf(new_shogi_game, " 馬 ");
 
-    fprintf(new_shogi_game, "%d %d", 9-initial_column, initial_row);
+    fprintf(new_shogi_game, "%d %d", 9-init_col, init_row);
 }
 
 void print_time(){
@@ -1165,128 +1165,124 @@ void print_time(){
 }
 
 void read_old_game(){
-    int i;
-    int old_year, old_month, old_day, old_hour, old_min;
-    char chess[5];
-    char str1[8], str2[8], str3[15];
-    int initial_row = 0, initial_column = 0, goal_row = 0, goal_column = 0, chess_index = 0;
+    int i, tmp;
+    char chess[5], str1[8], str2[8], str3[15];
+    int init_row = 0, init_col = 0, goal_row = 0, goal_col = 0, chess_index = 0;
     char promotion;
 
-    //fscanf(old_shogi_game, "開始時間: %d.%02d.%02d %02d:%02d\n", &old_year, &old_month, &old_day, &old_hour, &old_min);
     fscanf(old_shogi_game, "%3s%8s%13s\n",str1,str2,str3);
     
     initial_checkerboard();
 
     while(!feof(old_shogi_game)){
 
-        fscanf(old_shogi_game, "%3d %d %d %s %d %d %c\n", &turn, &goal_column, &goal_row, chess, &initial_column, &initial_row, &promotion);
-
-        //printf("%3d %d %d %d %d\n",turn, initial_column, initial_row, goal_column, goal_row);
-
-        if(turn%2 == 1 && checkerboard[goal_row][BOARDCOLUMN-goal_column-1] < 0){
+        fscanf(old_shogi_game, "%3d %d %d %s %d %d %c\n", &turn, &goal_col, &goal_row, chess, &init_col, &init_row, &promotion);
+        
+        // 升變降級
+        if(turn%2 == 1 && board[goal_row][BOARDCOL-goal_col-1] < 0){
             X_chess_top ++;
-            if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-9)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-1;
+            if(board[goal_row][BOARDCOL-goal_col-1]==-9)
+                board[goal_row][BOARDCOL-goal_col-1]=-1;
             
-            else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-10)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-2;
+            else if(board[goal_row][BOARDCOL-goal_col-1]==-10)
+                board[goal_row][BOARDCOL-goal_col-1]=-2;
 
-            else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-11)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-3;
+            else if(board[goal_row][BOARDCOL-goal_col-1]==-11)
+                board[goal_row][BOARDCOL-goal_col-1]=-3;
 
-            else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-12)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-8;
+            else if(board[goal_row][BOARDCOL-goal_col-1]==-12)
+                board[goal_row][BOARDCOL-goal_col-1]=-8;
 
-            else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-13)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-6;
+            else if(board[goal_row][BOARDCOL-goal_col-1]==-13)
+                board[goal_row][BOARDCOL-goal_col-1]=-6;
 
-            else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-14)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-7;
+            else if(board[goal_row][BOARDCOL-goal_col-1]==-14)
+                board[goal_row][BOARDCOL-goal_col-1]=-7;
 
-            X.chess[X_chess_top] = -(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]);
+            X.chess[X_chess_top] = -(board[goal_row][BOARDCOL-goal_col-1]);
         }
 
-        else if(turn%2 == 0 && checkerboard[goal_row][BOARDCOLUMN-goal_column-1] > 0){
+        else if(turn%2 == 0 && board[goal_row][BOARDCOL-goal_col-1] > 0){
             Y_chess_top ++;
-            if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==9)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=1;
+            if(board[goal_row][BOARDCOL-goal_col-1]==9)
+                board[goal_row][BOARDCOL-goal_col-1]=1;
 
-            else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==10)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=2;
+            else if(board[goal_row][BOARDCOL-goal_col-1]==10)
+                board[goal_row][BOARDCOL-goal_col-1]=2;
 
-            else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==11)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=3;
+            else if(board[goal_row][BOARDCOL-goal_col-1]==11)
+                board[goal_row][BOARDCOL-goal_col-1]=3;
 
-            else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==12)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=8;
+            else if(board[goal_row][BOARDCOL-goal_col-1]==12)
+                board[goal_row][BOARDCOL-goal_col-1]=8;
 
-            else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==13)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=6;
+            else if(board[goal_row][BOARDCOL-goal_col-1]==13)
+                board[goal_row][BOARDCOL-goal_col-1]=6;
 
-            else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==14)
-                checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=7;
+            else if(board[goal_row][BOARDCOL-goal_col-1]==14)
+                board[goal_row][BOARDCOL-goal_col-1]=7;
 
-            Y.chess[Y_chess_top] = -(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]);
+            Y.chess[Y_chess_top] = -(board[goal_row][BOARDCOL-goal_col-1]);
         }
 
-        if(initial_column != 9){
-            checkerboard[goal_row][BOARDCOLUMN-goal_column-1] = checkerboard[initial_row][BOARDCOLUMN-initial_column-1];
-            checkerboard[initial_row][BOARDCOLUMN-initial_column-1] = 0;
+        if(init_col != 9){
+            board[goal_row][BOARDCOL-goal_col-1] = board[init_row][BOARDCOL-init_col-1];
+            board[init_row][BOARDCOL-init_col-1] = 0;
 
             if(promotion == 'Y'){
-                if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==1){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=9;
+                if(board[goal_row][BOARDCOL-goal_col-1]==1){
+                    board[goal_row][BOARDCOL-goal_col-1]=9;
                 }
 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==2){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=10;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==2){
+                    board[goal_row][BOARDCOL-goal_col-1]=10;
                 }
 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==3){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=11;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==3){
+                    board[goal_row][BOARDCOL-goal_col-1]=11;
                 }
                 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==6){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=13;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==6){
+                    board[goal_row][BOARDCOL-goal_col-1]=13;
                 }
 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==7){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=14;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==7){
+                    board[goal_row][BOARDCOL-goal_col-1]=14;
                 }
 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==8){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=12;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==8){
+                    board[goal_row][BOARDCOL-goal_col-1]=12;
                 }
 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-1){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-9;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==-1){
+                    board[goal_row][BOARDCOL-goal_col-1]=-9;
                 }
 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-2){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-10;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==-2){
+                    board[goal_row][BOARDCOL-goal_col-1]=-10;
                 }
 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-3){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-11;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==-3){
+                    board[goal_row][BOARDCOL-goal_col-1]=-11;
                 }
                 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-6){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-13;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==-6){
+                    board[goal_row][BOARDCOL-goal_col-1]=-13;
                 }
 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-7){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-14;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==-7){
+                    board[goal_row][BOARDCOL-goal_col-1]=-14;
                 }
 
-                else if(checkerboard[goal_row][BOARDCOLUMN-goal_column-1]==-8){
-                    checkerboard[goal_row][BOARDCOLUMN-goal_column-1]=-12;
+                else if(board[goal_row][BOARDCOL-goal_col-1]==-8){
+                    board[goal_row][BOARDCOL-goal_col-1]=-12;
                 }
             }
         }
 
         else if(turn%2 == 1){
-            checkerboard[goal_row][BOARDCOLUMN-goal_column-1] = X.chess[initial_row];
-            X.chess[initial_row] = 0;
+            board[goal_row][BOARDCOL-goal_col-1] = X.chess[init_row];
+            X.chess[init_row] = 0;
             for(i=0; i< X_chess_top; i++){
                 if(X.chess[i] == 0){
                     X.chess[i] = X.chess[i+1];
@@ -1296,8 +1292,8 @@ void read_old_game(){
             X_chess_top--;
         }
         else if(turn%2 == 0){
-            checkerboard[goal_row][BOARDCOLUMN-goal_column-1] = Y.chess[initial_row];
-            Y.chess[initial_row] = 0;
+            board[goal_row][BOARDCOL-goal_col-1] = Y.chess[init_row];
+            Y.chess[init_row] = 0;
             for(i=0; i< Y_chess_top; i++){
                 if(Y.chess[i] == 0){
                     Y.chess[i] = Y.chess[i+1];
@@ -1307,7 +1303,7 @@ void read_old_game(){
             Y_chess_top--;
         }
         
-        push(initial_row, BOARDCOLUMN-initial_column-1, checkerboard[initial_row][BOARDCOLUMN-initial_column-1], goal_row, BOARDCOLUMN-goal_column-1, checkerboard[goal_row][BOARDCOLUMN-goal_column-1], X.chess, Y.chess);
+        push(init_row, BOARDCOL-init_col-1, board[init_row][BOARDCOL-init_col-1], goal_row, BOARDCOL-goal_col-1, board[goal_row][BOARDCOL-goal_col-1], X.chess, Y.chess);
     
     }
 
@@ -1323,7 +1319,7 @@ void review_old_game(){
 
     top = -1;
     turn = 1;
-    review_mode = 0;
+    review_mode = 1;
 
     while(stack->right != NULL){
         stack = stack->right;
@@ -1406,28 +1402,39 @@ int review_pop_forward(){
     else{
         top++;
 
-        if(review_mode == 0){
-            tmp = stack;
-            if(stack->left != NULL){
-                stack = stack->left;
+        if(review_mode == -1){
+            tmp = stack->left;
+            if(stack->left->left != NULL){
+                stack = stack->left->left;
+                review_mode = 1;
             }
             else{
-                review_mode = 1;
+                stack = stack->left;
+                review_mode = 2;
             }
         }
-        else if(review_mode == -1){
-            review_mode = 0;
+        else if(review_mode == 1){
             tmp = stack;
             if(stack->left != NULL){
                 stack = stack->left;
             }
             else{
-                review_mode = 1;
+                review_mode = 2;
+            }
+        }
+        else if(review_mode == -2){
+            review_mode = 1;
+            tmp = stack;
+            if(stack->left != NULL){
+                stack = stack->left;
+            }
+            else{
+                review_mode = 2;
             }
         }
         
-        checkerboard[tmp->initial_row_memory][tmp->initial_column_memory] = tmp->initial_chess_memory;
-        checkerboard[tmp->goal_row_memory][tmp->goal_column_memory] = tmp->goal_chess_memory;
+        board[tmp->initial_row_memory][tmp->initial_column_memory] = tmp->initial_chess_memory;
+        board[tmp->goal_row_memory][tmp->goal_column_memory] = tmp->goal_chess_memory;
 
         for(i=0; i<20; i++){
             X.chess[i] = X_chess_memory[top][i];
@@ -1457,28 +1464,39 @@ int review_pop_back(){
     }
     else{
         
-        if(review_mode == 0){
-            if(stack->right != NULL){
-                stack = stack->right;
-            }
-            else{
+        if(review_mode == 1){
+            tmp = stack->right;
+            if(stack->right->right != NULL){
+                stack = stack->right->right;
                 review_mode = -1;
             }
-            tmp = stack;
+            else{
+                stack = stack->right;
+                review_mode = -2;
+            }
         }
-        else if(review_mode == 1){
-            review_mode = 0;
+        else if(review_mode == -1){
             tmp = stack;
             if(stack->right != NULL){
                 stack = stack->right;
             }
             else{
-                review_mode = -1;
+                review_mode = -2;
+            }
+        }
+        else if(review_mode == 2){
+            review_mode = -1;
+            tmp = stack;
+            if(stack->right != NULL){
+                stack = stack->right;
+            }
+            else{
+                review_mode = -2;
             }
         }
         
-        checkerboard[tmp->initial_row_memory][tmp->initial_column_memory] = tmp->goal_chess_memory;
-        checkerboard[tmp->goal_row_memory][tmp->goal_column_memory] = tmp->initial_chess_memory;
+        board[tmp->initial_row_memory][tmp->initial_column_memory] = tmp->goal_chess_memory;
+        board[tmp->goal_row_memory][tmp->goal_column_memory] = tmp->initial_chess_memory;
 
         for(i=0; i<20; i++){
             X.chess[i] = X_chess_memory[top][i];
